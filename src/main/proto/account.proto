@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "de.needfulapps";
+option java_outer_classname = "AccountGrpcProto";
+
+package account;
+
+service AccountGrpc {
+  rpc GetAccount (GetAccountRequest) returns (GetAccountReply) {}
+  rpc AddAccount (AddAccountRequest) returns (AddAccountReply) {}
+}
+
+message GetAccountRequest {
+  string customer_number = 1;
+}
+
+message GetAccountReply {
+  string name = 1;
+  double balance = 2;
+}
+
+message AddAccountRequest {
+  string name = 1;
+}
+
+message AddAccountReply {
+  string name = 1;
+  double balance = 2;
+  string customer_number = 3;
+}
