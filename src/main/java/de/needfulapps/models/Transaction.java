@@ -16,7 +16,7 @@ public class Transaction {
 }
 
 // 1. Neue Proto-Datei  "transaction.proto"
-// 2. Neuer TransactionGrpcServie
+// 2. Neuer TransactionGrpcService
 // 3. Neue TransactionService
 //    a - getTransaction
 //    b - addTransaction -> Kontostand ändern

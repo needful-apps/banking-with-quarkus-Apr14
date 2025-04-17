@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "de.needfulapps";
+option java_outer_classname = "TransactionGrpcProto";
+
+package transaction;
+
+service TransactionGrpc {
+  rpc GetTransaction (GetTransactionRequest) returns (GetTransactionReply) {}
+  rpc AddTransaction (AddTransactionRequest) returns (AddTransactionReply) {}
+}
+
+message GetTransactionRequest {
+  string id = 1;
+}
+
+message GetTransactionReply {
+  string id = 1;
+  string sender = 2;
+  string receiver = 3;
+  double amount = 4;
+  string currency = 5;
+}
+
+message AddTransactionRequest {
+  string sender = 2;
+  string receiver = 3;
+  double amount = 4;
+  string currency = 5;
+}
+
+message AddTransactionReply {
+  string id = 1;
+}

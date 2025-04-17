@@ -33,4 +33,14 @@ public class AccountService {
                 .findFirst()
                 .orElse(null);
     }
+
+    public void changeBalance(String accountNumber, BigDecimal amount) {
+        var account = getAccount(accountNumber);
+        if (account != null) {
+            account.setBalance(account.getBalance().add(amount));
+            log.info("Account balance changed: " + account);
+        } else {
+            log.warning("Account not found: " + accountNumber);
+        }
+    }
 }
