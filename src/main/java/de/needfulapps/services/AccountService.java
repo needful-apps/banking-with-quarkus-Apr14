@@ -36,7 +36,7 @@ public class AccountService {
                 .orElse(null);
     }
 
-    public void changeBalance(String accountNumber, BigDecimal amount) {
+    public void changeBalance(String accountNumber, BigDecimal amount) throws InsufficientCreditsException {
         var account = getAccount(accountNumber);
         if (account != null) {
             log.info(accountNumber + ": " + account.getBalance().add(amount));

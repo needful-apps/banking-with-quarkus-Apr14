@@ -2,6 +2,7 @@ package de.needfulapps.services;
 
 import de.needfulapps.AddTransactionReply;
 import de.needfulapps.GetTransactionReply;
+import de.needfulapps.exceptions.InsufficientCreditsException;
 import de.needfulapps.models.Transaction;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,7 +22,7 @@ public class TransactionService {
 
     private HashMap<String, Transaction> transactions = new HashMap<>();
 
-    public Uni<AddTransactionReply> addTransaction(String sender, String receiver, BigDecimal amount, String currency) {
+    public Uni<AddTransactionReply> addTransaction(String sender, String receiver, BigDecimal amount, String currency) throws InsufficientCreditsException {
         var id = UUID.randomUUID().toString();
         var transaction = new Transaction(id, sender, receiver, amount, currency);
 

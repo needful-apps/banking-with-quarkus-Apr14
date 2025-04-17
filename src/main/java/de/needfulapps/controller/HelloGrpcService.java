@@ -6,6 +6,7 @@ import de.needfulapps.HelloRequest;
 import io.quarkus.grpc.GrpcService;
 
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,21 @@ public class HelloGrpcService implements HelloGrpc {
     // 2. Mit say Hello, den Namen in der HashMap -> ID zurückgeben
 
     @Override
+    @RolesAllowed({"admin", "user"})
     public Uni<HelloReply> sayHello(HelloRequest request) {
+
+//        "timestamp": {
+//            "low": 1121403988,
+//                    "high": 406,
+//                    "unsigned": false
+//        }
+
+        int low = 1121403988;
+        int high = 406;
+
+        long unsignedLow = Integer.toUnsignedLong(low);
+        long longValue = (((long) high) << 32 | unsignedLow);
+
         LOG.info("Received request from: " + request.getName());
         MINILOG.info("minime");
         counter++;

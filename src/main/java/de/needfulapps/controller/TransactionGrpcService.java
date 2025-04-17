@@ -1,6 +1,7 @@
 package de.needfulapps.controller;
 
 import de.needfulapps.*;
+import de.needfulapps.exceptions.InsufficientCreditsException;
 import de.needfulapps.services.TransactionService;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
@@ -21,6 +22,10 @@ public class TransactionGrpcService implements TransactionGrpc {
 
     @Override
     public Uni<AddTransactionReply> addTransaction(AddTransactionRequest request) {
-        return service.addTransaction(request.getSender(), request.getReceiver(), BigDecimal.valueOf(request.getAmount()), request.getCurrency());
+        try {
+            return service.addTransaction(request.getSender(), request.getReceiver(), BigDecimal.valueOf(request.getAmount()), request.getCurrency());
+        } catch (InsufficientCreditsException e) {
+            return Uni.createFrom().failure(e);
+        }
     }
 }
