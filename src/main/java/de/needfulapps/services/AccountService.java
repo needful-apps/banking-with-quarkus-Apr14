@@ -1,15 +1,17 @@
 package de.needfulapps.services;
 
+import de.needfulapps.exceptions.InsufficientCreditsException;
 import de.needfulapps.models.Account;
+import de.needfulapps.models.Transaction;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Singleton;
 import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static de.needfulapps.services.TransactionService.MAX_OVERDRAFT;
 
 @Log
 @ApplicationScoped
@@ -37,6 +39,13 @@ public class AccountService {
     public void changeBalance(String accountNumber, BigDecimal amount) {
         var account = getAccount(accountNumber);
         if (account != null) {
+            log.info(accountNumber + ": " + account.getBalance().add(amount));
+
+            if (account.getBalance().add(amount).compareTo(MAX_OVERDRAFT.negate()) < 0) {
+                log.warning("Overdraft limit exceeded for account: " + accountNumber);
+                throw new InsufficientCreditsException();
+            }
+
             account.setBalance(account.getBalance().add(amount));
             log.info("Account balance changed: " + account);
         } else {

@@ -40,3 +40,54 @@ compileTestJava {
 task deleteFolder(type: Delete) {
     delete 'build'
 }
+
+task killJavaOnPort9000 {
+    doLast {
+        def os = System.getProperty("os.name").toLowerCase()
+        def port = 9000
+        def pid = null
+
+        if (os.contains("win")) {
+            println "Running on Windows..."
+            def findPid = "netstat -ano | findstr :$port".execute()
+            findPid.waitFor()
+            def output = findPid.in.text
+            def lines = output.readLines()
+            if (!lines.isEmpty()) {
+                def lastLine = lines[-1]
+                pid = lastLine.tokenize().last()
+            }
+            if (pid) {
+                println "Killing process on port $port (PID: $pid)..."
+                "taskkill /PID $pid /F".execute().waitFor()
+            } else {
+                println "No process found on port $port."
+            }
+        } else {
+            println "Running on Unix/Linux/macOS..."
+            pid = "lsof -i :$port -t -sTCP:LISTEN".execute().text.trim()
+            if (pid) {
+                println "Killing process on port $port (PID: $pid)..."
+                "kill -9 $pid".execute().waitFor()
+            } else {
+                println "No process found on port $port."
+            }
+        }
+    }
+
+    task restartQuarkusDev {
+        dependsOn 'killJavaOnPort9000'
+
+        doLast {
+            println "Starting Quarkus dev mode..."
+            exec {
+                if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                    commandLine 'cmd', '/c', 'gradlew.bat', 'quarkusDev'
+                } else {
+                    commandLine './gradlew', 'quarkusDev'
+                }
+            }
+        }
+    }
+
+}
