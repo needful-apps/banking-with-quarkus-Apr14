@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "de.needfulapps";
+option java_outer_classname = "StockGrpcProto";
+
+package stock;
+
+service StockGrpc {
+  rpc StreamStockPrices (StockRequest) returns (stream StockPriceReply) {}
+}
+
+message StockRequest {
+  repeated string symbol = 1;
+  // List<String> name;
+}
+
+message StockPriceReply {
+  string symbol = 1;
+  double price = 2;
+  int64 timestamp = 3;
+}
