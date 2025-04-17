@@ -27,7 +27,6 @@ public class HelloGrpcService implements HelloGrpc {
     // 2. Mit say Hello, den Namen in der HashMap -> ID zurückgeben
 
     @Override
-    @RolesAllowed({"admin", "user"})
     public Uni<HelloReply> sayHello(HelloRequest request) {
 
 //        "timestamp": {

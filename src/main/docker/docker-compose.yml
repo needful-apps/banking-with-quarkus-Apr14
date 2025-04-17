@@ -1,0 +1,17 @@
+services:
+  quarkus-grpc-app:
+    image: quarkus/banking-with-quarkus-jvm:latest
+    container_name: quarkus-grpc
+    ports:
+      - "9000:9000"
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - JAVA_OPTIONS=-Dquarkus.grpc.server.port=9000
+    networks:
+      - quarkus-net
+    restart: unless-stopped
+
+networks:
+  quarkus-net:
+    driver: bridge
